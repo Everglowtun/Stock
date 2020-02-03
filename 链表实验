@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
+struct liste{
+    char* str;
+    struct liste *next;
+};
+typedef struct liste liste;
+liste* create(liste *p){
+    p=(liste*)malloc(sizeof(liste));
+    p->str=(char*)malloc(sizeof(char)*256);
+    return p;
+}
+void affichage_liste(liste *l){
+    while(l){
+        printf("%s->",l->str);
+        l=l->next;
+    }
+    printf("NULL");
+}
+
+liste * sort_message_order(liste * head)
+{   
+    liste *Back,*pointer;
+    char temp[256];
+    Back=head->next; 
+    pointer=head->next;
+    while(Back!=NULL)
+    {
+        while(pointer->next!=NULL)
+        { 
+            pointer=pointer->next;
+            if ( strcmp( Back->str,pointer->str)>0  ) 
+            {
+                strcpy(temp,Back->str);
+                strcpy( Back->str,pointer->str);
+                strcpy(pointer->str,temp);    
+        }
+        Back=Back->next;
+        pointer=Back;
+    }
+    return head;
+    
+}
+}
+int main(){
+    liste *p,*head;
+    char *b=".c";
+    int w=0;
+    head=create(head);
+    p=create(p);
+    head->next=p;
+    printf("dirp->d_name\n");
+    printf("Please input a directory");
+    
+    while(1){
+        scanf("%s",p->str);
+        p->next=create(p->next);
+        p=p->next;
+        w++;
+        if(w==5){
+            break;
+        }
+    }
+   
+    p=head->next;
+    affichage_liste(p);
+    p=sort_message_order(p);
+    printf("\n");
+    affichage_liste(p);
+    
+    return 0;
+}
