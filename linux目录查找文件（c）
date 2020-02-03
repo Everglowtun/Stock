@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
+struct liste{
+    char* str;
+    struct liste *next;
+};
+typedef struct liste liste;
+liste* create(liste *p){
+    p=(liste*)malloc(sizeof(liste));
+    p->str=(char *)malloc(sizeof(char)*256);
+    p->next=NULL;
+    return p;
+}
+void affichage_liste(liste *l){
+    while(l){
+        printf("%s->",l->str);
+        l=l->next;
+    }
+    printf("NULL");
+}
+liste* tire(liste *L)
+{
+    liste *p,*q,*small;
+    char temp[256];
+ 
+    for(p = L; p->next != NULL; p = p->next)
+    {
+        small = p;
+        for(q = p->next; q; q = q->next)
+        {
+            if(strcmp(q->str,small->str)<0)
+            {
+                small = q;
+            }
+        }
+        if(small != p)
+        {
+                strcpy(temp,p->str);
+                strcpy( p->str,small->str);
+                strcpy(small->str,temp);  
+        }
+
+    }
+    return L;
+}
+int main(){
+    DIR *dp;
+    
+    struct dirent *dirp;
+    liste *p,*head;
+    char *b=".c";
+    int w;
+    head=create(head);
+    p=create(p);
+    head->next=p;
+    char dirname[256];
+    printf("dirp->d_name\n");
+    printf("Please input a directory");
+    scanf("%s",dirname);
+    if((dp=opendir(dirname))==NULL){
+        printf("Can't open %s\n",dirname);
+    }
+    while(dirp = readdir(dp)){
+       // printf("strcmp(b, c) : %d\n", strcmp(strchr(dirp->d_name,'.'),".c"));
+        if(strcmp(dirp->d_name,".")==0||strcmp(dirp->d_name,"..")==0 ||strrchr(dirp->d_name,'.')==NULL) continue;
+        if(strcmp(strrchr(dirp->d_name,'.'),b)!=0) continue;
+        p->str=dirp->d_name;
+        p->next=create(p->next);
+        p=p->next;
+    }
+   
+    p=head->next;
+    affichage_liste(p);
+    p=tire(p);
+    printf("\n");
+    affichage_liste(p);
+    closedir(dp);
+    
+    return 0;
+}
